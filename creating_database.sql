@@ -104,3 +104,18 @@ INSERT INTO Dim_Date VALUES
 (20241001, '2024-10-01', 1,  10, 2024, 'Tuesday',   4, 0),
 (20241201, '2024-12-25', 25, 12, 2024, 'Wednesday', 4, 1);
 GO
+-- ============================================================
+-- Dim_Location
+-- ============================================================
+INSERT INTO Dim_Location VALUES
+(1,  'Johannesburg',   'Gauteng',       'South Africa', '2000', -26.2041, 28.0473),
+(2,  'Cape Town',      'Western Cape',  'South Africa', '8000', -33.9249, 18.4241),
+(3,  'Durban',         'KwaZulu-Natal', 'South Africa', '4001', -29.8587, 31.0218),
+(4,  'Pretoria',       'Gauteng',       'South Africa', '0001', -25.7479, 28.2293),
+(5,  'Port Elizabeth', 'Eastern Cape',  'South Africa', '6001', -33.9608, 25.6022),
+(6,  'Sandton',        'Gauteng',       'South Africa', '2196', -26.1070, 28.0567),
+(7,  'Soweto',         'Gauteng',       'South Africa', '1800', -26.2678, 27.8585),
+(8,  'Bloemfontein',   'Free State',    'South Africa', '9300', -29.0852, 26.1596),
+(9,  'East London',    'Eastern Cape',  'South Africa', '5200', -33.0153, 27.9116),
+(10, 'Polokwane',      'Limpopo',       'South Africa', '0699', -23.8962, 29.4486);
+GO
