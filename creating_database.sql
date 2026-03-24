@@ -61,3 +61,27 @@ CREATE TABLE Dim_Date (
     IsHoliday       BIT             DEFAULT 0       -- 1 = Holiday, 0 = Normal day
 );
 GO
+-- ============================================================
+-- FACT TABLE
+-- ============================================================
+
+CREATE TABLE Fact_Deliveries (
+    DeliveryID              INT             PRIMARY KEY,
+    CustomerID              INT             NOT NULL,
+    DriverID                INT             NOT NULL,
+    VehicleID               INT             NOT NULL,
+    DateID                  INT             NOT NULL,
+    LocationID              INT             NOT NULL,
+    DeliveryStatus          NVARCHAR(30)    NOT NULL,
+    DistanceKM              DECIMAL(10,2),
+    DeliveryCost            DECIMAL(12,2),
+    DeliveryTimeMinutes     INT,
+
+    CONSTRAINT fk_customer  FOREIGN KEY (CustomerID)    REFERENCES Dim_Customer(CustomerID),
+    CONSTRAINT fk_driver    FOREIGN KEY (DriverID)      REFERENCES Dim_Driver(DriverID),
+    CONSTRAINT fk_vehicle   FOREIGN KEY (VehicleID)     REFERENCES Dim_Vehicle(VehicleID),
+    CONSTRAINT fk_date      FOREIGN KEY (DateID)        REFERENCES Dim_Date(DateID),
+    CONSTRAINT fk_location  FOREIGN KEY (LocationID)    REFERENCES Dim_Location(LocationID)
+);
+GO
+
