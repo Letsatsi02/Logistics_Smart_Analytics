@@ -28,3 +28,13 @@ CREATE TABLE Dim_Vehicle (
     Status          NVARCHAR(20)    DEFAULT 'Active'
 );
 GO
+-- Dim_Driver
+CREATE TABLE Dim_Driver (
+    DriverID        INT             PRIMARY KEY,
+    DriverName      NVARCHAR(100)   NOT NULL,
+    LicenseType     NVARCHAR(20),
+    ExperienceYears SMALLINT,
+    HireDate        DATE,
+    IsActive        BIT             DEFAULT 1
+);
+GO
