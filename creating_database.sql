@@ -119,3 +119,18 @@ INSERT INTO Dim_Location VALUES
 (9,  'East London',    'Eastern Cape',  'South Africa', '5200', -33.0153, 27.9116),
 (10, 'Polokwane',      'Limpopo',       'South Africa', '0699', -23.8962, 29.4486);
 GO
+-- ============================================================
+-- Dim_Customer
+-- ============================================================
+INSERT INTO Dim_Customer VALUES
+(1,  'Thabo Nkosi',        '0821234567', 'thabo@email.com',    'Retail',    1,  '2022-03-10', 1),
+(2,  'Lerato Dlamini',     '0839876543', 'lerato@corp.co.za',  'Corporate', 2,  '2021-07-15', 1),
+(3,  'Mohammed Patel',     '0741112233', 'mpatel@biz.co.za',   'SME',       3,  '2023-01-20', 1),
+(4,  'Nomsa Zulu',         '0823334455', 'nomsa@mail.co.za',   'Retail',    4,  '2022-11-05', 1),
+(5,  'Pieter van der Berg','0826667788', 'pieter@co.za',       'Corporate', 5,  '2020-06-01', 1),
+(6,  'Ayanda Mthembu',     '0835559900', 'ayanda@co.za',       'SME',       6,  '2023-08-14', 1),
+(7,  'Fatima Osman',       '0810001122', 'fatima@shop.co.za',  'Retail',    7,  '2024-01-03', 1),
+(8,  'David Sithole',      '0827778899', 'david@biz.co.za',    'Corporate', 8,  '2021-04-22', 0),
+(9,  'Zanele Mokoena',     '0844445566', 'zanele@mail.co.za',  'Retail',    9,  '2023-05-30', 1),
+(10, 'Sipho Mahlangu',     '0852223344', 'sipho@co.za',        'SME',       10, '2022-09-18', 1);
+GO
