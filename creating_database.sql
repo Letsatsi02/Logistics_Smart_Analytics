@@ -134,3 +134,18 @@ INSERT INTO Dim_Customer VALUES
 (9,  'Zanele Mokoena',     '0844445566', 'zanele@mail.co.za',  'Retail',    9,  '2023-05-30', 1),
 (10, 'Sipho Mahlangu',     '0852223344', 'sipho@co.za',        'SME',       10, '2022-09-18', 1);
 GO
+-- ============================================================
+-- Dim_Vehicle
+-- ============================================================
+INSERT INTO Dim_Vehicle VALUES
+(1,  'Motorbike', 'GP 12-34 AB',  50.00,   2021, 'Active'),
+(2,  'Van',       'GP 56-78 CD',  800.00,  2020, 'Active'),
+(3,  'Truck',     'WC 90-12 EF',  5000.00, 2019, 'Active'),
+(4,  'Van',       'KZN 34-56 GH', 800.00,  2022, 'Maintenance'),
+(5,  'Motorbike', 'GP 78-90 IJ',  50.00,   2023, 'Active'),
+(6,  'Truck',     'GP 11-22 KL',  8000.00, 2020, 'Active'),
+(7,  'Van',       'EC 33-44 MN',  1000.00, 2021, 'Active'),
+(8,  'Motorbike', 'WC 55-66 OP',  50.00,   2022, 'Active'),
+(9,  'Truck',     'FS 77-88 QR',  6000.00, 2018, 'Retired'),
+(10, 'Van',       'LP 99-00 ST',  900.00,  2023, 'Active');
+GO
