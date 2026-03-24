@@ -149,3 +149,18 @@ INSERT INTO Dim_Vehicle VALUES
 (9,  'Truck',     'FS 77-88 QR',  6000.00, 2018, 'Retired'),
 (10, 'Van',       'LP 99-00 ST',  900.00,  2023, 'Active');
 GO
+-- ============================================================
+-- Dim_Driver
+-- ============================================================
+INSERT INTO Dim_Driver VALUES
+(1,  'Bongani Khoza',     'C',  8,  '2016-03-01', 1),
+(2,  'Ruan du Plessis',   'EC', 12, '2012-07-15', 1),
+(3,  'Nandi Cele',        'B',  3,  '2021-01-10', 1),
+(4,  'Ashraf Hendricks',  'C',  6,  '2018-05-20', 1),
+(5,  'Lungelo Ntuli',     'B',  2,  '2022-06-01', 1),
+(6,  'Maria Santos',      'EC', 15, '2009-09-09', 1),
+(7,  'Trevor Botha',      'C',  9,  '2015-11-03', 0),
+(8,  'Nomvula Shabalala', 'B',  4,  '2020-02-14', 1),
+(9,  'Yusuf Fredericks',  'C',  7,  '2017-08-30', 1),
+(10, 'Dineo Molefe',      'B',  1,  '2023-09-01', 1);
+GO
