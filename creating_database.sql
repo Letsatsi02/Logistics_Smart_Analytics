@@ -49,3 +49,15 @@ CREATE TABLE Dim_Location (
     Longitude       DECIMAL(9,6)
 );
 GO
+-- Dim_Date
+CREATE TABLE Dim_Date (
+    DateID          INT             PRIMARY KEY,
+    FullDate        DATE            NOT NULL,
+    Day             TINYINT         NOT NULL,
+    Month           TINYINT         NOT NULL,
+    Year            SMALLINT        NOT NULL,
+    DayOfWeek       NVARCHAR(10)    NOT NULL,
+    Quarter         TINYINT         NOT NULL,
+    IsHoliday       BIT             DEFAULT 0       -- 1 = Holiday, 0 = Normal day
+);
+GO
