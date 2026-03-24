@@ -38,3 +38,14 @@ CREATE TABLE Dim_Driver (
     IsActive        BIT             DEFAULT 1
 );
 GO
+-- Dim_Location
+CREATE TABLE Dim_Location (
+    LocationID      INT             PRIMARY KEY,
+    City            NVARCHAR(100)   NOT NULL,
+    Region          NVARCHAR(100),
+    Country         NVARCHAR(100)   NOT NULL,
+    PostalCode      NVARCHAR(20),
+    Latitude        DECIMAL(9,6),
+    Longitude       DECIMAL(9,6)
+);
+GO
