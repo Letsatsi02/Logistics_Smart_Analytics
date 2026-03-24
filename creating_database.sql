@@ -18,4 +18,13 @@ CREATE TABLE Dim_Customer (
     IsActive        BIT             DEFAULT 1       -- 1 = TRUE, 0 = FALSE
 );
 GO
-
+-- Dim_Vehicle
+CREATE TABLE Dim_Vehicle (
+    VehicleID       INT             PRIMARY KEY,
+    VehicleType     NVARCHAR(50)    NOT NULL,
+    PlateNumber     NVARCHAR(20)    NOT NULL UNIQUE,
+    CapacityKG      DECIMAL(10,2),
+    ModelYear       SMALLINT,
+    Status          NVARCHAR(20)    DEFAULT 'Active'
+);
+GO
