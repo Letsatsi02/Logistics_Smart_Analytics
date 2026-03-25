@@ -435,3 +435,27 @@ INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
 INNER JOIN Dim_Date d ON f.DateID = d.DateID
 WHERE f.DeliveryStatus IN ('Pending', 'In Transit')
 ORDER BY DaysWaiting DESC;
+---Which driver and vehicle combinations are the most efficient?
+SELECT
+dr.DriverName,
+dr.LicenseType,
+dr.ExperienceYears,
+v.VehicleType,
+v.PlateNumber,
+v.CapacityKG,
+COUNT(f.DeliveryID) AS TotalDeliveries,
+ROUND(SUM(f.DeliveryCost), 2) AS TotalRevenue,
+ROUND(AVG(f.DistanceKM), 1) AS AvgDistanceKM,
+ROUND(AVG(CAST(f.DeliveryTimeMinutes AS FLOAT)), 1) AS AvgTimeMin,
+ROUND(SUM(f.DeliveryCost) / NULLIF(SUM(f.DistanceKM), 0), 2) AS RevenuePerKM,
+SUM(CASE WHEN f.DeliveryStatus = 'Delivered' THEN 1 ELSE 0 END) AS Successful,
+SUM(CASE WHEN f.DeliveryStatus = 'Failed' THEN 1 ELSE 0 END) AS Failed
+FROM dbo.Fact_Delivery f
+INNER JOIN Dim_Driver dr ON f.DriverID = dr.DriverID
+INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
+INNER JOIN Dim_Customer c ON f.CustomerID = c.CustomerID
+INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
+INNER JOIN Dim_Date d ON f.DateID = d.DateID
+GROUP BY dr.DriverName, dr.LicenseType, dr.ExperienceYears,
+v.VehicleType, v.PlateNumber, v.CapacityKG
+ORDER BY RevenuePerKM DESC;
