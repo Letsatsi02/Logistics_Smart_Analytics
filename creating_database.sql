@@ -498,3 +498,28 @@ INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
 INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
 GROUP BY d.Year, d.Quarter
 ORDER BY d.Year, d.Quarter;
+
+--- What is a one-row KPI overview of the entire business operation?
+SELECT
+COUNT(f.DeliveryID) AS TotalDeliveries,
+ROUND(SUM(f.DeliveryCost), 2) AS TotalRevenue,
+ROUND(AVG(f.DeliveryCost), 2) AS AvgRevenuePerDelivery,
+ROUND(SUM(f.DistanceKM), 1) AS TotalDistanceKM,
+COUNT(DISTINCT c.CustomerID) AS TotalCustomers,
+COUNT(DISTINCT dr.DriverID) AS TotalDrivers,
+COUNT(DISTINCT v.VehicleID) AS TotalVehicles,
+COUNT(DISTINCT l.City) AS CitiesServed,
+SUM(CASE WHEN f.DeliveryStatus = 'Delivered' THEN 1 ELSE 0 END) AS TotalDelivered,
+SUM(CASE WHEN f.DeliveryStatus = 'Failed' THEN 1 ELSE 0 END) AS TotalFailed,
+SUM(CASE WHEN f.DeliveryStatus = 'Pending' THEN 1 ELSE 0 END) AS TotalPending,
+ROUND(
+CAST(SUM(CASE WHEN f.DeliveryStatus = 'Delivered'
+THEN 1 ELSE 0 END) AS FLOAT)
+/ COUNT(f.DeliveryID) * 100, 1
+) AS OverallSuccessRatePct
+FROM dbo.Fact_Delivery f
+INNER JOIN Dim_Customer c ON f.CustomerID = c.CustomerID
+INNER JOIN Dim_Driver dr ON f.DriverID = dr.DriverID
+INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
+INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
+INNER JOIN Dim_Date d ON f.DateID = d.DateID;
