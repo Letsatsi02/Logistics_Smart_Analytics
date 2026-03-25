@@ -314,3 +314,31 @@ INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
 INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
 GROUP BY d.Year, d.Month, d.Quarter
 ORDER BY d.Year, d.Month;
+-- What are the root causes of every failed delivery? 
+SELECT
+f.DeliveryID,
+d.FullDate AS DeliveryDate,
+d.DayOfWeek,
+d.IsHoliday,
+c.FullName AS CustomerName,
+c.CustomerType,
+c.PhoneNumber AS CustomerPhone,
+dr.DriverName,
+dr.LicenseType,
+dr.ExperienceYears,
+v.VehicleType,
+v.PlateNumber,
+v.Status AS VehicleStatus,
+l.City,
+l.Region,
+f.DistanceKM,
+f.DeliveryCost,
+f.DeliveryTimeMinutes
+FROM dbo.Fact_Delivery f
+INNER JOIN Dim_Customer c ON f.CustomerID = c.CustomerID
+INNER JOIN Dim_Driver dr ON f.DriverID = dr.DriverID
+INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
+INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
+INNER JOIN Dim_Date d ON f.DateID = d.DateID
+WHERE f.DeliveryStatus = 'Failed'
+ORDER BY d.FullDate DESC;
