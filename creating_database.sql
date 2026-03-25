@@ -274,3 +274,22 @@ INNER JOIN Dim_Date d ON f.DateID = d.DateID
 GROUP BY v.VehicleID, v.VehicleType, v.PlateNumber,
 v.CapacityKG, v.Status, dr.DriverName, l.City
 ORDER BY RevenuePerKM DESC;
+--- Which cities and regions have the highest delivery demand for resource allocation?
+SELECT
+l.City,
+l.Region,
+l.Country,
+COUNT(f.DeliveryID) AS TotalDeliveries,
+ROUND(SUM(f.DeliveryCost), 2) AS TotalRevenue,
+ROUND(AVG(f.DistanceKM), 1) AS AvgDistanceKM,
+ROUND(AVG(CAST(f.DeliveryTimeMinutes AS FLOAT)), 1) AS AvgDeliveryTimeMin,
+COUNT(DISTINCT c.CustomerID) AS UniqueCustomers,
+COUNT(DISTINCT dr.DriverID) AS DriversDeployed
+FROM dbo.Fact_Delivery f
+INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
+INNER JOIN Dim_Customer c ON f.CustomerID = c.CustomerID
+INNER JOIN Dim_Driver dr ON f.DriverID = dr.DriverID
+INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
+INNER JOIN Dim_Date d ON f.DateID = d.DateID
+GROUP BY l.LocationID, l.City, l.Region, l.Country
+ORDER BY TotalDeliveries DESC;
