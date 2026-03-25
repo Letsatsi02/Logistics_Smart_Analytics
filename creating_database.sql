@@ -229,3 +229,27 @@ INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
 INNER JOIN Dim_Date d ON f.DateID = d.DateID
 GROUP BY c.CustomerID, c.FullName, c.CustomerType, c.Email, l.City, l.Region
 ORDER BY TotalRevenue DESC;
+--- Which drivers perform best, ranked by their delivery success rate and speed?
+SELECT
+dr.DriverName,
+dr.LicenseType,
+dr.ExperienceYears,
+v.VehicleType AS VehicleUsed,
+COUNT(f.DeliveryID) AS TotalDeliveries,
+SUM(CASE WHEN f.DeliveryStatus = 'Delivered' THEN 1 ELSE 0 END) AS Successful,
+SUM(CASE WHEN f.DeliveryStatus = 'Failed' THEN 1 ELSE 0 END) AS Failed,
+ROUND(
+CAST(SUM(CASE WHEN f.DeliveryStatus = 'Delivered'
+THEN 1 ELSE 0 END) AS FLOAT)
+/ COUNT(f.DeliveryID) * 100, 1
+) AS SuccessRatePct,
+ROUND(AVG(f.DistanceKM), 1) AS AvgDistanceKM,
+ROUND(AVG(CAST(f.DeliveryTimeMinutes AS FLOAT)), 1) AS AvgTimeMin
+FROM dbo.Fact_Delivery f
+INNER JOIN Dim_Driver dr ON f.DriverID = dr.DriverID
+INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
+INNER JOIN Dim_Customer c ON f.CustomerID = c.CustomerID
+INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
+INNER JOIN Dim_Date d ON f.DateID = d.DateID
+GROUP BY dr.DriverID, dr.DriverName, dr.LicenseType, dr.ExperienceYears, v.VehicleType
+ORDER BY SuccessRatePct DESC;
