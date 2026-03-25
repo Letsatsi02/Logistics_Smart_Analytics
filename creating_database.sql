@@ -478,3 +478,23 @@ INNER JOIN Dim_Driver dr ON f.DriverID = dr.DriverID
 INNER JOIN Dim_Date d ON f.DateID = d.DateID
 GROUP BY v.VehicleType, l.Region, l.Country
 ORDER BY TotalRevenue DESC;
+--- What is the quarterly revenue growth with a full KPI breakdown?
+SELECT
+d.Year,
+d.Quarter,
+CONCAT('Q', d.Quarter, ' ', d.Year) AS QuarterLabel,
+COUNT(f.DeliveryID) AS TotalDeliveries,
+ROUND(SUM(f.DeliveryCost), 2) AS TotalRevenue,
+ROUND(SUM(f.DistanceKM), 1) AS TotalDistanceKM,
+COUNT(DISTINCT c.CustomerID) AS UniqueCustomers,
+COUNT(DISTINCT dr.DriverID) AS ActiveDrivers,
+COUNT(DISTINCT v.VehicleID) AS VehiclesDeployed,
+COUNT(DISTINCT l.City) AS CitiesServed
+FROM dbo.Fact_Delivery f
+INNER JOIN Dim_Date d ON f.DateID = d.DateID
+INNER JOIN Dim_Customer c ON f.CustomerID = c.CustomerID
+INNER JOIN Dim_Driver dr ON f.DriverID = dr.DriverID
+INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
+INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
+GROUP BY d.Year, d.Quarter
+ORDER BY d.Year, d.Quarter;
