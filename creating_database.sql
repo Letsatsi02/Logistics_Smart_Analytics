@@ -459,3 +459,22 @@ INNER JOIN Dim_Date d ON f.DateID = d.DateID
 GROUP BY dr.DriverName, dr.LicenseType, dr.ExperienceYears,
 v.VehicleType, v.PlateNumber, v.CapacityKG
 ORDER BY RevenuePerKM DESC;
+--- Which vehicle types generate the most revenue in each region?
+SELECT
+v.VehicleType,
+l.Region,
+l.Country,
+COUNT(f.DeliveryID) AS TotalDeliveries,
+ROUND(SUM(f.DeliveryCost), 2) AS TotalRevenue,
+ROUND(AVG(f.DeliveryCost), 2) AS AvgRevenue,
+ROUND(AVG(f.DistanceKM), 1) AS AvgDistanceKM,
+SUM(CASE WHEN f.DeliveryStatus = 'Delivered' THEN 1 ELSE 0 END) AS Delivered,
+SUM(CASE WHEN f.DeliveryStatus = 'Failed' THEN 1 ELSE 0 END) AS Failed
+FROM dbo.Fact_Delivery f
+INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
+INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
+INNER JOIN Dim_Customer c ON f.CustomerID = c.CustomerID
+INNER JOIN Dim_Driver dr ON f.DriverID = dr.DriverID
+INNER JOIN Dim_Date d ON f.DateID = d.DateID
+GROUP BY v.VehicleType, l.Region, l.Country
+ORDER BY TotalRevenue DESC;
