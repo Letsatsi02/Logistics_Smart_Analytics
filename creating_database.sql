@@ -184,8 +184,7 @@ INSERT INTO Fact_Deliveries VALUES
 (1014, 7,  6,  6,  20241001, 6,  'Delivered',  190.0, 1250.00, 330),
 (1015, 2,  3,  1,  20241201, 4,  'Delivered',  7.0,   50.00,   22);
 GO
-
---- Query retrieves a complete view of all deliveries in the system, 
+--- Query 1 retrieves a complete view of all deliveries in the system, 
 --- combine data from the fact table Fact_Delivery with all related dimension tables for detailed
 SELECT
     f.DeliveryID,
@@ -210,4 +209,23 @@ INNER JOIN dbo.Dim_Vehicle v ON f.VehicleID = v.VehicleID
 INNER JOIN dbo.Dim_Location l ON f.LocationID = l.LocationID
 INNER JOIN dbo.Dim_Date d ON f.DateID = d.DateID
 ORDER BY d.FullDate DESC;
-
+--- Query 2 Which customers generate the most revenue based on their total spend and number of deliveries?
+SELECT
+c.FullName AS CustomerName,
+c.CustomerType,
+c.Email,
+l.City AS CustomerCity,
+l.Region,
+COUNT(f.DeliveryID) AS TotalDeliveries,
+ROUND(SUM(f.DeliveryCost), 2) AS TotalRevenue,
+ROUND(AVG(f.DeliveryCost), 2) AS AvgDeliveryCost,
+SUM(CASE WHEN f.DeliveryStatus = 'Delivered' THEN 1 ELSE 0 END) AS Successful,
+SUM(CASE WHEN f.DeliveryStatus = 'Failed' THEN 1 ELSE 0 END) AS Failed
+FROM dbo.Fact_Delivery f
+INNER JOIN Dim_Customer c ON f.CustomerID = c.CustomerID
+INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
+INNER JOIN Dim_Driver dr ON f.DriverID = dr.DriverID
+INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
+INNER JOIN Dim_Date d ON f.DateID = d.DateID
+GROUP BY c.CustomerID, c.FullName, c.CustomerType, c.Email, l.City, l.Region
+ORDER BY TotalRevenue DESC;
