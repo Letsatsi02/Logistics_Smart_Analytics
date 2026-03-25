@@ -413,3 +413,25 @@ INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
 INNER JOIN Dim_Date d ON f.DateID = d.DateID
 WHERE f.DistanceKM > 50
 ORDER BY f.DistanceKM DESC;
+--- Which deliveries are pending or in-transit, and how long have they been waiting?
+SELECT
+f.DeliveryID,
+d.FullDate AS OrderDate,
+DATEDIFF(DAY, d.FullDate, GETDATE()) AS DaysWaiting,
+c.FullName AS CustomerName,
+c.PhoneNumber AS CustomerPhone,
+dr.DriverName,
+v.VehicleType,
+v.PlateNumber,
+l.City,
+l.Region,
+f.DistanceKM,
+f.DeliveryCost
+FROM dbo.Fact_Delivery f
+INNER JOIN Dim_Customer c ON f.CustomerID = c.CustomerID
+INNER JOIN Dim_Driver dr ON f.DriverID = dr.DriverID
+INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
+INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
+INNER JOIN Dim_Date d ON f.DateID = d.DateID
+WHERE f.DeliveryStatus IN ('Pending', 'In Transit')
+ORDER BY DaysWaiting DESC;
