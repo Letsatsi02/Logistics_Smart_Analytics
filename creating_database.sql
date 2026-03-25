@@ -253,3 +253,24 @@ INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
 INNER JOIN Dim_Date d ON f.DateID = d.DateID
 GROUP BY dr.DriverID, dr.DriverName, dr.LicenseType, dr.ExperienceYears, v.VehicleType
 ORDER BY SuccessRatePct DESC;
+-- Which vehicles are most cost-efficient and generate the highest revenue per kilometre?
+SELECT
+v.VehicleType,
+v.PlateNumber,
+v.CapacityKG,
+v.Status AS VehicleStatus,
+dr.DriverName AS AssignedDriver,
+l.City AS DeliveryCity,
+COUNT(f.DeliveryID) AS TotalTrips,
+ROUND(SUM(f.DistanceKM), 1) AS TotalKMCovered,
+ROUND(SUM(f.DeliveryCost), 2) AS TotalRevenue,
+ROUND(SUM(f.DeliveryCost) / NULLIF(SUM(f.DistanceKM), 0), 2) AS RevenuePerKM
+FROM dbo.Fact_Delivery f
+INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
+INNER JOIN Dim_Driver dr ON f.DriverID = dr.DriverID
+INNER JOIN Dim_Customer c ON f.CustomerID = c.CustomerID
+INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
+INNER JOIN Dim_Date d ON f.DateID = d.DateID
+GROUP BY v.VehicleID, v.VehicleType, v.PlateNumber,
+v.CapacityKG, v.Status, dr.DriverName, l.City
+ORDER BY RevenuePerKM DESC;
