@@ -363,3 +363,28 @@ INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
 INNER JOIN Dim_Date d ON f.DateID = d.DateID
 GROUP BY c.CustomerType
 ORDER BY TotalRevenue DESC;
+-- What are the operational costs of deliveries on weekends and public holidays?
+SELECT
+d.FullDate AS DeliveryDate,
+d.DayOfWeek,
+CASE
+WHEN d.IsHoliday = 1 THEN 'Public Holiday'
+WHEN d.DayOfWeek IN ('Saturday','Sunday') THEN 'Weekend'
+ELSE 'Weekday'
+END AS DayType,
+c.FullName AS CustomerName,
+dr.DriverName,
+v.VehicleType,
+l.City,
+f.DeliveryStatus,
+f.DistanceKM,
+f.DeliveryCost,
+f.DeliveryTimeMinutes
+FROM dbo.Fact_Delivery f
+INNER JOIN Dim_Date d ON f.DateID = d.DateID
+INNER JOIN Dim_Customer c ON f.CustomerID = c.CustomerID
+INNER JOIN Dim_Driver dr ON f.DriverID = dr.DriverID
+INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
+INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
+WHERE d.IsHoliday = 1 OR d.DayOfWeek IN ('Saturday', 'Sunday')
+ORDER BY d.FullDate DESC;
