@@ -342,3 +342,24 @@ INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
 INNER JOIN Dim_Date d ON f.DateID = d.DateID
 WHERE f.DeliveryStatus = 'Failed'
 ORDER BY d.FullDate DESC;
+--- How do revenue and success rate compare across Corporate, Retail, and SME customer segments?
+SELECT
+c.CustomerType,
+COUNT(DISTINCT c.CustomerID) AS TotalCustomers,
+COUNT(f.DeliveryID) AS TotalDeliveries,
+ROUND(SUM(f.DeliveryCost), 2) AS TotalRevenue,
+ROUND(AVG(f.DeliveryCost), 2) AS AvgRevenuePerDelivery,
+COUNT(DISTINCT l.City) AS CitiesServed,
+ROUND(
+CAST(SUM(CASE WHEN f.DeliveryStatus = 'Delivered'
+THEN 1 ELSE 0 END) AS FLOAT)
+/ COUNT(f.DeliveryID) * 100, 1
+) AS SuccessRatePct
+FROM dbo.Fact_Delivery f
+INNER JOIN Dim_Customer c ON f.CustomerID = c.CustomerID
+INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
+INNER JOIN Dim_Driver dr ON f.DriverID = dr.DriverID
+INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
+INNER JOIN Dim_Date d ON f.DateID = d.DateID
+GROUP BY c.CustomerType
+ORDER BY TotalRevenue DESC;
