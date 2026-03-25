@@ -184,3 +184,30 @@ INSERT INTO Fact_Deliveries VALUES
 (1014, 7,  6,  6,  20241001, 6,  'Delivered',  190.0, 1250.00, 330),
 (1015, 2,  3,  1,  20241201, 4,  'Delivered',  7.0,   50.00,   22);
 GO
+
+--- Query retrieves a complete view of all deliveries in the system, 
+--- combine data from the fact table Fact_Delivery with all related dimension tables for detailed
+SELECT
+    f.DeliveryID,
+    c.FullName AS CustomerName,
+    c.CustomerType,
+    dr.DriverName,
+    dr.LicenseType,
+    v.VehicleType,
+    v.PlateNumber,
+    l.City,
+    l.Region,
+    d.FullDate AS DeliveryDate,
+    d.DayOfWeek,
+    f.DeliveryStatus,
+    f.DistanceKM,
+    f.DeliveryCost,
+    f.DeliveryTimeMinutes
+FROM dbo.Fact_Delivery f
+INNER JOIN dbo.Dim_Customer c ON f.CustomerID = c.CustomerID
+INNER JOIN dbo.Dim_Driver dr ON f.DriverID = dr.DriverID
+INNER JOIN dbo.Dim_Vehicle v ON f.VehicleID = v.VehicleID
+INNER JOIN dbo.Dim_Location l ON f.LocationID = l.LocationID
+INNER JOIN dbo.Dim_Date d ON f.DateID = d.DateID
+ORDER BY d.FullDate DESC;
+
