@@ -388,3 +388,28 @@ INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
 INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
 WHERE d.IsHoliday = 1 OR d.DayOfWeek IN ('Saturday', 'Sunday')
 ORDER BY d.FullDate DESC;
+--- Which deliveries over 50 KM have high distance and cost, and need routing attention?
+SELECT
+f.DeliveryID,
+c.FullName AS CustomerName,
+c.CustomerType,
+dr.DriverName,
+dr.ExperienceYears,
+v.VehicleType,
+v.CapacityKG,
+l.City,
+l.Region,
+d.FullDate AS DeliveryDate,
+f.DeliveryStatus,
+f.DistanceKM,
+f.DeliveryCost,
+f.DeliveryTimeMinutes,
+ROUND(f.DeliveryCost / NULLIF(f.DistanceKM, 0), 2) AS CostPerKM
+FROM dbo.Fact_Delivery f
+INNER JOIN Dim_Customer c ON f.CustomerID = c.CustomerID
+INNER JOIN Dim_Driver dr ON f.DriverID = dr.DriverID
+INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
+INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
+INNER JOIN Dim_Date d ON f.DateID = d.DateID
+WHERE f.DistanceKM > 50
+ORDER BY f.DistanceKM DESC;
