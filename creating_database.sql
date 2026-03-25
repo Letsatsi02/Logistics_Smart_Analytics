@@ -293,3 +293,24 @@ INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
 INNER JOIN Dim_Date d ON f.DateID = d.DateID
 GROUP BY l.LocationID, l.City, l.Region, l.Country
 ORDER BY TotalDeliveries DESC;
+--- What are the month-on-month delivery trends and growth across all key metrics?
+SELECT
+d.Year,
+d.Month,
+d.Quarter,
+COUNT(f.DeliveryID) AS TotalDeliveries,
+ROUND(SUM(f.DeliveryCost), 2) AS TotalRevenue,
+COUNT(DISTINCT c.CustomerID) AS UniqueCustomers,
+COUNT(DISTINCT dr.DriverID) AS ActiveDrivers,
+COUNT(DISTINCT v.VehicleID) AS VehiclesUsed,
+COUNT(DISTINCT l.City) AS CitiesServed,
+SUM(CASE WHEN f.DeliveryStatus = 'Delivered' THEN 1 ELSE 0 END) AS Delivered,
+SUM(CASE WHEN f.DeliveryStatus = 'Failed' THEN 1 ELSE 0 END) AS Failed
+FROM dbo.Fact_Delivery f
+INNER JOIN Dim_Date d ON f.DateID = d.DateID
+INNER JOIN Dim_Customer c ON f.CustomerID = c.CustomerID
+INNER JOIN Dim_Driver dr ON f.DriverID = dr.DriverID
+INNER JOIN Dim_Vehicle v ON f.VehicleID = v.VehicleID
+INNER JOIN Dim_Location l ON f.LocationID = l.LocationID
+GROUP BY d.Year, d.Month, d.Quarter
+ORDER BY d.Year, d.Month;
